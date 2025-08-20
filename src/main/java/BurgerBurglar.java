@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BurgerBurglar {
+    private static List<String> list = new ArrayList<>();
     private static String logo =
             "                           ................                           \n" +
                     "                    ...:::::--:::::::::::::::::...                    \n" +
@@ -46,14 +49,15 @@ public class BurgerBurglar {
             if (input.equalsIgnoreCase("bye")) {
                 exit();
                 break;
+            } else if (input.equalsIgnoreCase("list")) {
+                showList();
             } else {
-                System.out.print(lineBreak);
-                System.out.println(input);
-                System.out.println(lineBreak);
+                addTask(input);
             }
         }
 
         scanner.close();
+        list.clear();
     }
 
     private static void greet() {
@@ -67,6 +71,21 @@ public class BurgerBurglar {
         System.out.print(lineBreak);
         System.out.println("GOODBYE, GOODBURGER.");
         System.out.println(lineBreak);
-        System.out.println(logo + "EXITING BURGERBURGLAR v0.0");
+        System.out.println("EXITING BURGERBURGLAR v0.0");
+    }
+
+    private static void addTask(String task) {
+        list.add(task);
+        System.out.print(lineBreak);
+        System.out.println("added: " + task);
+        System.out.println(lineBreak);
+    }
+
+    private static void showList() {
+        System.out.print(lineBreak);
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println((i + 1) + ". " + list.get(i));
+        }
+        System.out.println(lineBreak);
     }
 }
