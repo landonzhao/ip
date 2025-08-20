@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class BurgerBurglar {
     private static String logo =
             "                           ................                           \n" +
@@ -35,7 +37,23 @@ public class BurgerBurglar {
     private static String lineBreak = "______________________________________________________________________\n";
     public static void main(String[] args) {
         greet();
-        exit();
+        Scanner scanner = new Scanner(System.in);
+        String input;
+
+        while (true) {
+            System.out.print("YOU: ");
+            input = scanner.nextLine();
+            if (input.equalsIgnoreCase("bye")) {
+                exit();
+                break;
+            } else {
+                System.out.print(lineBreak);
+                System.out.println(input);
+                System.out.println(lineBreak);
+            }
+        }
+
+        scanner.close();
     }
 
     private static void greet() {
@@ -46,7 +64,9 @@ public class BurgerBurglar {
     }
 
     private static void exit() {
+        System.out.print(lineBreak);
         System.out.println("GOODBYE, GOODBURGER.");
         System.out.println(lineBreak);
+        System.out.println(logo + "EXITING BURGERBURGLAR v0.0");
     }
 }
