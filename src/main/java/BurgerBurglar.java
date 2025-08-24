@@ -66,7 +66,7 @@ public class BurgerBurglar {
             } else if (input.startsWith("event")) {
                 handleEvent(input.substring(6)); // skip "event "
             } else {
-                System.out.println("BURGER DOESN'T KNOW THAT COMMAND YET.");
+                System.out.println("BURGER DON'T GET IT.");
             }
         }
 
