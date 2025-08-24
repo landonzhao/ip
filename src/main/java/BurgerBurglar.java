@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class BurgerBurglar {
-    private static List<Task> list = new ArrayList<>();
+    private static TaskList list = new TaskList();
     private static String logo =
                     "                           ................\n" +
                     "                    ...:::::--:::::::::::::::::...\n" +
@@ -32,6 +30,7 @@ public class BurgerBurglar {
                     "----------------------------------------------------------------------\n";
 
     private static String lineBreak = "______________________________________________________________________\n";
+
     public static void main(String[] args) {
         greet();
         Scanner scanner = new Scanner(System.in);
@@ -48,7 +47,19 @@ public class BurgerBurglar {
                 mark(input, true);
             } else if (input.startsWith("unmark")) {
                 mark(input, false);
-            }  else if (input.startsWith("todo")) {
+            } else if (input.startsWith("delete")) {
+                String[] parts = input.split(" ", 2);
+                if (parts.length < 2) {
+                    System.out.println("BURGER ERROR: WHAT DO YOU WANT TO DELETE?");
+                } else {
+                    try {
+                        int taskNumber = Integer.parseInt(parts[1].trim());
+                        Task removed = list.deleteTask(taskNumber - 1);
+                    } catch (NumberFormatException e) {
+                        System.out.println("BURGER ERROR: HEY. THAT'S NOT A NUMBER.");
+                    }
+                }
+            } else if (input.startsWith("todo")) {
                 addTodo(input.substring(5)); // skip "todo "
             } else if (input.startsWith("deadline")) {
                 handleDeadline(input.substring(9)); // skip "deadline "
@@ -60,13 +71,12 @@ public class BurgerBurglar {
         }
 
         scanner.close();
-        list.clear();
     }
 
     private static void greet() {
         System.out.println(logo + "INITIATING BURGERBURGLAR v0.0\n" +
                 "------------------------------------------------------------------100%\n");
-        System.out.println("BURGER SAYS HI.\nWHAT CAN BURGER DO FOR YOU?");
+        System.out.println("BURGER SAYS HI.\nWHAT CAN BURGER STEAL FOR YOU?");
         System.out.println(lineBreak);
     }
 
@@ -79,15 +89,13 @@ public class BurgerBurglar {
 
     private static void addTodo(String desc) {
         Task t = new Todo(desc);
-        list.add(t);
-        printAddMessage(t);
+        list.addTask(t);
     }
 
     private static void handleDeadline(String input) {
         String[] parts = input.split("/by", 2);
         Task t = new Deadline(parts[0].trim(), parts.length > 1 ? parts[1].trim() : "unspecified");
-        list.add(t);
-        printAddMessage(t);
+        list.addTask(t);
     }
 
     private static void handleEvent(String input) {
@@ -102,17 +110,14 @@ public class BurgerBurglar {
             }
         }
         Task t = new Event(description, from, to);
-        list.add(t);
-        printAddMessage(t);
+        list.addTask(t);
     }
 
     private static void mark(String input, boolean done) {
         try {
             String[] parts = input.split(" ");
             int index = Integer.parseInt(parts[1]) - 1; // convert to 0-based
-            Task task = list.get(index);
-            task.setDone(done);
-
+            Task task = list.markTask(index, done);
             System.out.print(lineBreak);
             if (done) {
                 System.out.println("YOU DID IT! BURGER!\nMARKED:  " + task);
@@ -126,20 +131,6 @@ public class BurgerBurglar {
     }
 
     private static void showList() {
-        System.out.print(lineBreak);
-        System.out.println("HERE'S WHAT'S LEFT TO DO:");
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println((i + 1) + ". " + list.get(i));
-        }
-        System.out.println(lineBreak);
+        System.out.println(list);
     }
-
-    private static void printAddMessage(Task t) {
-        System.out.print(lineBreak);
-        System.out.println("YOU BETTER FINISH THAT SOON. BURGERS.");
-        System.out.println("ADDED: " + t);
-        System.out.println("NOW YOU HAVE " + list.size() + " TASKS.");
-        System.out.println(lineBreak);
-    }
-
 }
