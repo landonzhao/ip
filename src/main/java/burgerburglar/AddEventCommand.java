@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class AddEventCommand extends Command {
-    private final String args;
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private final String args;
 
     public AddEventCommand(String args) {
         this.args = args;

@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class AddDeadlineCommand extends Command {
-    private final String args;
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private final String args;
 
     public AddDeadlineCommand(String args) {
         this.args = args;
