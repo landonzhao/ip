@@ -9,14 +9,34 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Handles the loading and saving of {@link TaskList} data to a local file.
+ * <p>
+ * Each task is serialized into a line in the file, and the Storage class is responsible
+ * for reading that file and reconstructing {@link Task} objects, as well as writing
+ * updated task data back to the file.
+ */
 public class Storage {
     private String FILE_PATH = "./data/burgerburglar.txt";
 
+    /**
+     * Constructs a Storage object that manages a specific file path.
+     *
+     * @param filePath the file path where tasks will be loaded from and saved to
+     */
     public Storage(String filePath) {
         this.FILE_PATH = filePath;
     }
 
-    // Load tasks from file
+    /**
+     * Loads the task list from the file specified in {@link #FILE_PATH}.
+     * <p>
+     * If the file or its parent directories do not exist, they will be created automatically,
+     * and an empty {@link TaskList} will be returned.
+     *
+     * @return a {@link TaskList} containing tasks loaded from the file
+     * @throws BurgerException if there is an I/O error while reading the file
+     */
     public TaskList load() throws BurgerException {
         File file = new File(FILE_PATH);
         ArrayList<Task> tasks = new ArrayList<>();
@@ -49,6 +69,13 @@ public class Storage {
         return new TaskList(tasks);
     }
 
+    /**
+     * Saves the given {@link TaskList} to the file specified in {@link #FILE_PATH}.
+     * <p>
+     * Each task is serialized into a line in the file.
+     *
+     * @param list the {@link TaskList} to save
+     */
     public void save(TaskList list) {
         try (FileWriter fw = new FileWriter(FILE_PATH)) {
             for (Task task : list.getTasks()) {
@@ -59,6 +86,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a single line from the storage file into a {@link Task} object.
+     *
+     * @param line a line from the storage file
+     * @return the {@link Task} object represented by the line, or {@code null} if invalid
+     */
     private Task parseLine(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];

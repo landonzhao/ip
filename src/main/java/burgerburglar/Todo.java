@@ -1,5 +1,11 @@
 package burgerburglar;
 
+/**
+ * Represents a Todo task in BurgerBurglar.
+ * <p>
+ * A Todo is a simple task that has a description and a completion status,
+ * but no associated date or time.
+ */
 public class Todo extends Task {
     public Todo(String description) {
         super(description);

@@ -1,5 +1,8 @@
 package burgerburglar;
 
+/**
+ * Represents the exit command which terminates the BurgerBurglar program.
+ */
 public class ExitCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

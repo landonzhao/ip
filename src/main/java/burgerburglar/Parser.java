@@ -1,6 +1,20 @@
 package burgerburglar;
 
+/**
+ * Parses user input into a {@link Command} that can be executed by {@link BurgerBurglar}.
+ * <p>
+ * The Parser interprets the first word of the input as the command keyword and
+ * the remaining text as arguments for that command.
+ */
 public class Parser {
+
+    /**
+     * Parses a string input from the user and returns the corresponding {@link Command}.
+     *
+     * @param input the raw input string from the user
+     * @return a {@link Command} object representing the action requested by the user
+     * @throws BurgerException if the input does not match any known command
+     */
     public static Command parse(String input) throws BurgerException {
         String[] parts = input.trim().split(" ", 2);
         String commandWord = parts[0];

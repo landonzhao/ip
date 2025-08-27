@@ -1,24 +1,43 @@
 package burgerburglar;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
+/**
+ * Handles all user interactions for BurgerBurglar.
+ * <p>
+ * Responsibilities include reading user input, printing messages, errors,
+ * welcome/goodbye messages, task lists, and the user manual.
+ */
 public class Ui {
-    private final Scanner scanner = new Scanner(System.in);
-
     private static final String LINE_BREAK =
             "______________________________________________________________________";
 
-    // Show the welcome message with logo and version
+    private final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Shows the welcome message, including the BurgerBurglar logo and version,
+     * followed by a user manual.
+     *
+     * @param logo    the ASCII art logo
+     * @param version the version string
+     */
     public void showWelcome(String logo, String version) {
-        System.out.println(logo + "INITIATING BURGERBURGLAR " + version + "\n" +
-                "------------------------------------------------------------------100%\n");
+        System.out.println(logo + "INITIATING BURGERBURGLAR " + version + "\n"
+                + "------------------------------------------------------------------100%\n");
         showLine();
         printUserManual();
         showLine();
         System.out.println("GOOD DAY, GOOD BURGER.\nWHAT CAN BURGER STEAL FOR YOU?");
     }
 
-    // Show goodbye message
+    /**
+     * Shows the goodbye message.
+     *
+     * @param version the version string
+     */
     public void showGoodbye(String version) {
         showLine();
         System.out.println("GOODBYE, GOODBURGER.");
@@ -36,7 +55,11 @@ public class Ui {
         return scanner.nextLine();
     }
 
-    // Show an error message
+    /**
+     * Shows an error message.
+     *
+     * @param message the error message to display
+     */
     public void showError(String message) {
         showLine();
         System.out.println("BURGER ERROR: " + message);
@@ -53,69 +76,20 @@ public class Ui {
         System.out.println(tasks);
     }
 
-    // Show the "BURGER" bonus message
+    /** Shows the "BURGER" bonus message. */
     public void showBurger() {
         showLine();
         System.out.println("BURGER IS BURGER, AND YOU ARE THE FRIES.");
         showLine();
     }
 
+    /** Prints the user manual loaded from a text file. */
     public void printUserManual() {
-        String manual = """
-        BURGERBURGLAR – USER MANUAL
-        ______________________________________________________________________
-
-        GOODDAY AND GOODNIGHT. THIS IS BURGER.
-        BURGER STEALS YOUR TASKS AND MANAGES THEM.
-        HERE'S HOW YOU CAN BURGER YOUR TASKS:
-
-        COMMANDS:
-
-        1. Add Tasks
-           - todo <description>
-             Example: todo read book
-             Adds a simple task to your list.
-
-           - deadline <description> /by <date>
-             Example: deadline return book /by 2025-06-06 1800
-             Adds a task with a deadline.
-
-           - event <description> /from <start time> /to <end time>
-             Example: event project meeting /from 2025-08-06 1400 /to 2025-08-06 1600
-             Adds an event with a start and end time.
-
-        2. List Tasks
-           - list
-             Shows all tasks with their status and type.
-
-        3. Mark Tasks as Done or Not Done
-           - mark <task number>
-             Example: mark 2
-             Marks the task as done.
-
-           - unmark <task number>
-             Example: unmark 2
-             Marks the task as not done.
-
-        4. Delete Tasks
-           - delete <task number>
-             Example: delete 3
-             Removes the task from your list.
-
-        5. Exit BURGER
-           - bye
-             Saves your tasks and exits the program.
-       
-        BONUS: Say BURGER for surprise!
-
-        ______________________________________________________________________
-        NOTES:
-        - Tasks are automatically saved to disk whenever you add, delete, or update them.
-        - If you run BURGER for the first time, it will create a storage file automatically.
-        - BURGER ignores corrupted lines in the storage file, so your other tasks remain safe.
-        ______________________________________________________________________
-        """;
-
-        System.out.println(manual);
+        try {
+            String manual = Files.readString(Path.of("./data/user_manual.txt"));
+            System.out.println(manual);
+        } catch (IOException e) {
+            System.out.println("BURGER ERROR: Could not load user manual.");
+        }
     }
 }

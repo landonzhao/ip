@@ -1,5 +1,12 @@
 package burgerburglar;
 
+/**
+ * Represents a task in BurgerBurglar.
+ * <p>
+ * A task has a description and a completion status (done or not done).
+ * This is an abstract class, and concrete task types (e.g., {@link Deadline}, {@link Event}, {@link Todo})
+ * should extend this class and implement the {@link #serialize()} method.
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;

@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Command to add an event task to the task list.
+ * The command expects input in the format: (description) /from (start time) /to (end time).
+ */
 public class AddEventCommand extends Command {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private final String args;
@@ -36,3 +40,4 @@ public class AddEventCommand extends Command {
         }
     }
 }
+

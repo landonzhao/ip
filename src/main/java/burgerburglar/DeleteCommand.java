@@ -1,5 +1,9 @@
 package burgerburglar;
 
+/**
+ * Represents a command to delete a task from the task list.
+ * The task to be deleted is specified by its index in the list.
+ */
 public class DeleteCommand extends Command {
     private final String args;
 

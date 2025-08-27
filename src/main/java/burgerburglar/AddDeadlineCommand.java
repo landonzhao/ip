@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Command to add a deadline task to the task list.
+ * The command expects input in the format: (description) /by (deadline)
+ */
 public class AddDeadlineCommand extends Command {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private final String args;

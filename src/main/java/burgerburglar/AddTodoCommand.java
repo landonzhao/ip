@@ -1,5 +1,8 @@
 package burgerburglar;
 
+/**
+ * Represents the command to add a Todo task to the task list.
+ */
 public class AddTodoCommand extends Command {
     private final String args;
 
