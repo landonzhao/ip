@@ -66,11 +66,10 @@ public class TaskList {
      * @return The removed task.
      */
     public Task deleteTask(int index) {
-        if (index < 0 || index >= tasks.size()) {
-            System.out.println("BURGER ERROR: TASK NUMBER OUT OF RANGE.");
-            return null;
+        if (index <= 0 || index >= tasks.size()) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        Task removed = tasks.remove(index);
+        Task removed = tasks.remove(index - 1);
         System.out.println("______________________________________________________________________");
         System.out.println("BURGER HAS REMOVED THIS TASK:");
         System.out.println("  " + removed);

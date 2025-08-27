@@ -8,7 +8,6 @@ public class Deadline extends Task {
 
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
-    // Constructor takes LocalDateTime (already parsed in BurgerBurglar)
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
