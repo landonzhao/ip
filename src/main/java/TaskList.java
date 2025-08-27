@@ -45,8 +45,14 @@ public class TaskList {
         Task task = tasks.get(index);
         if (isDone) {
             task.markAsDone();
+            System.out.println("______________________________________________________________________");
+            System.out.println("YOU DID IT! BURGER!\nMARKED:  " + task);
+            System.out.println("______________________________________________________________________");
         } else {
             task.markAsUndone();
+            System.out.println("______________________________________________________________________");
+            System.out.println("BURGER IS ASHAMED OF YOU.\nUNMARKED:  " + task);
+            System.out.println("______________________________________________________________________");
         }
         return task;
     }
@@ -68,7 +74,6 @@ public class TaskList {
         System.out.println("  " + removed);
         System.out.println("NOW YOU HAVE " + tasks.size() + " TASK(S) IN THE LIST.");
         System.out.println("______________________________________________________________________");
-        Storage.save(this);
         return removed;
     }
 

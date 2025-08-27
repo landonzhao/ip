@@ -8,16 +8,21 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Storage {
-    private static final String FILE_PATH = "./data/burgerburglar.txt";
+    private String FILE_PATH = "./data/burgerburglar.txt";
 
-    public static TaskList load() {
+    public Storage(String filePath) {
+        this.FILE_PATH = filePath;
+    }
+
+    // Load tasks from file
+    public TaskList load() throws BurgerException {
         File file = new File(FILE_PATH);
         ArrayList<Task> tasks = new ArrayList<>();
 
         try {
             if (!file.exists()) {
-                file.getParentFile().mkdirs(); // create ./data folder if missing
-                file.createNewFile();          // create burgerburglar.txt
+                file.getParentFile().mkdirs(); // create folder if missing
+                file.createNewFile();          // create file
                 return new TaskList();
             }
 
@@ -34,14 +39,15 @@ public class Storage {
                     }
                 }
             }
+
         } catch (IOException e) {
-            System.out.println("BURGER ERROR: Failed to load tasks.");
+            throw new BurgerException("BURGER ERROR: Failed to load tasks from file.");
         }
 
         return new TaskList(tasks);
     }
 
-    public static void save(TaskList list) {
+    public void save(TaskList list) {
         try (FileWriter fw = new FileWriter(FILE_PATH)) {
             for (Task task : list.getTasks()) {
                 fw.write(task.serialize() + System.lineSeparator());
@@ -51,7 +57,7 @@ public class Storage {
         }
     }
 
-    private static Task parseLine(String line) {
+    private Task parseLine(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean isDone = parts[1].equals("1");

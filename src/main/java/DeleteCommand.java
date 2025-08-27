@@ -1,0 +1,18 @@
+public class DeleteCommand extends Command {
+    private final String args;
+
+    public DeleteCommand(String args) {
+        this.args = args;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws BurgerException {
+        try {
+            int index = Integer.parseInt(args.trim()) - 1;
+            Task removed = tasks.deleteTask(index);
+            storage.save(tasks);
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new BurgerException("BURGER ERROR: Invalid task number for delete.");
+        }
+    }
+}
