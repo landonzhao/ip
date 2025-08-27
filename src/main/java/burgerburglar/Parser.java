@@ -39,6 +39,8 @@ public class Parser {
                 return new AddEventCommand(args);
             case "burger":
                 return new BurgerCommand();
+            case "find":
+                return new FindCommand(args);
             default:
                 throw new BurgerException("BURGER DOESN’T GET IT.");
         }
