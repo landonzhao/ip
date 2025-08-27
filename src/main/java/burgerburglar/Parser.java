@@ -1,3 +1,5 @@
+package burgerburglar;
+
 public class Parser {
     public static Command parse(String input) throws BurgerException {
         String[] parts = input.trim().split(" ", 2);

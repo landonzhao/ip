@@ -1,3 +1,5 @@
+package burgerburglar;
+
 import java.util.Scanner;
 
 public class Ui {

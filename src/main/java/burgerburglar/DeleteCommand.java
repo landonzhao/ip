@@ -1,3 +1,5 @@
+package burgerburglar;
+
 public class DeleteCommand extends Command {
     private final String args;
 

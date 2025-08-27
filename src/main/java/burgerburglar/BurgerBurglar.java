@@ -1,3 +1,5 @@
+package burgerburglar;
+
 public class BurgerBurglar {
     private final Ui ui;
     private final TaskList tasks;

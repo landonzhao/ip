@@ -1,3 +1,5 @@
+package burgerburglar;
+
 public class MarkCommand extends Command {
     private final String args;
     private final boolean isMark;

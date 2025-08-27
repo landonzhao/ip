@@ -1,3 +1,5 @@
+package burgerburglar;
+
 public class AddTodoCommand extends Command {
     private final String args;
 
