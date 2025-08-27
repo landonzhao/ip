@@ -1,4 +1,10 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Storage {
@@ -50,15 +56,47 @@ public class Storage {
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
 
-        switch (type) {
-            case "T":
-                return new Todo(parts[2], isDone);
-            case "D":
-                return new Deadline(parts[2], parts[3], isDone);
-            case "E":
-                return new Event(parts[2], parts[3], parts.length > 4 ? parts[4] : "", isDone);
-            default:
-                return null;
+        try {
+            switch (type) {
+                case "T":
+                    return new Todo(parts[2], isDone);
+
+                case "D":
+                    LocalDateTime deadline = null;
+                    if (parts.length > 3 && !parts[3].isEmpty()) {
+                        try {
+                            deadline = LocalDateTime.parse(parts[3]);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("BURGER ERROR: Invalid date in saved deadline, using unspecified.");
+                        }
+                    }
+                    return new Deadline(parts[2], deadline, isDone);
+
+                case "E":
+                    LocalDateTime from = null;
+                    LocalDateTime to = null;
+                    if (parts.length > 3 && !parts[3].isEmpty()) {
+                        try {
+                            from = LocalDateTime.parse(parts[3]);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("BURGER ERROR: Invalid start date in saved event, using unspecified.");
+                        }
+                    }
+                    if (parts.length > 4 && !parts[4].isEmpty()) {
+                        try {
+                            to = LocalDateTime.parse(parts[4]);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("BURGER ERROR: Invalid end date in saved event, using unspecified.");
+                        }
+                    }
+                    return new Event(parts[2], from, to, isDone);
+
+                default:
+                    return null;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("BURGER ERROR: Malformed line skipped → " + line);
+            return null;
         }
     }
 }

@@ -58,12 +58,17 @@ public class TaskList {
      * @return The removed task.
      */
     public Task deleteTask(int index) {
+        if (index < 0 || index >= tasks.size()) {
+            System.out.println("BURGER ERROR: TASK NUMBER OUT OF RANGE.");
+            return null;
+        }
         Task removed = tasks.remove(index);
-        System.out.print(LINE_BREAK);
+        System.out.println("______________________________________________________________________");
         System.out.println("BURGER HAS REMOVED THIS TASK:");
         System.out.println("  " + removed);
         System.out.println("NOW YOU HAVE " + tasks.size() + " TASK(S) IN THE LIST.");
-        System.out.println(LINE_BREAK);
+        System.out.println("______________________________________________________________________");
+        Storage.save(this);
         return removed;
     }
 
