@@ -42,6 +42,10 @@ public class BurgerBurglar {
         tasks = loadedTasks;
     }
 
+    public BurgerBurglar() {
+        this("data/burgerburglar.txt");
+    }
+
     /**
      * Starts the main program loop.
      * Displays the welcome message, then repeatedly reads user input
