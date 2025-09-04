@@ -16,7 +16,7 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         ArrayList<Task> matches = new ArrayList<>();
         for (Task t : tasks.getTasks()) {
             if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
@@ -24,15 +24,17 @@ public class FindCommand extends Command {
             }
         }
 
-        ui.showLine();
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
         if (matches.isEmpty()) {
-            System.out.println("BURGER FOUND NO MATCH FOR: " + keyword);
+            sb.append("BURGER FOUND NO MATCH FOR: ").append(keyword).append("\n");
         } else {
-            System.out.println("BURGER FOUND THESE TASKS: ");
+            sb.append("BURGER FOUND THESE TASKS:\n");
             for (int i = 0; i < matches.size(); i++) {
-                System.out.println((i + 1) + "." + matches.get(i));
+                sb.append(i + 1).append(". ").append(matches.get(i)).append("\n");
             }
         }
-        ui.showLine();
+        sb.append("\n");
+        return sb.toString();
     }
 }

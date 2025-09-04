@@ -29,11 +29,6 @@ public class TaskList {
      */
     public void addTask(Task task) {
         tasks.add(task);
-        System.out.print(LINE_BREAK);
-        System.out.println("YOU BETTER FINISH THAT SOON. BURGERS.");
-        System.out.println("ADDED: " + task);
-        System.out.println("NOW YOU HAVE " + tasks.size() + " TASK(S).");
-        System.out.println(LINE_BREAK);
     }
 
     /**
@@ -47,14 +42,8 @@ public class TaskList {
         Task task = tasks.get(index);
         if (isDone) {
             task.markAsDone();
-            System.out.println("______________________________________________________________________");
-            System.out.println("YOU DID IT! BURGER!\nMARKED:  " + task);
-            System.out.println("______________________________________________________________________");
         } else {
             task.markAsUndone();
-            System.out.println("______________________________________________________________________");
-            System.out.println("BURGER IS ASHAMED OF YOU.\nUNMARKED:  " + task);
-            System.out.println("______________________________________________________________________");
         }
         return task;
     }
@@ -69,13 +58,7 @@ public class TaskList {
         if (index <= 0 || index >= tasks.size()) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        Task removed = tasks.remove(index - 1);
-        System.out.println("______________________________________________________________________");
-        System.out.println("BURGER HAS REMOVED THIS TASK:");
-        System.out.println("  " + removed);
-        System.out.println("NOW YOU HAVE " + tasks.size() + " TASK(S) IN THE LIST.");
-        System.out.println("______________________________________________________________________");
-        return removed;
+        return tasks.remove(index - 1);
     }
 
     /**
@@ -100,7 +83,6 @@ public class TaskList {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(LINE_BREAK);
         if (tasks.isEmpty()) {
             sb.append("ALL DONE. BURGER!\n");
         } else {
@@ -112,7 +94,6 @@ public class TaskList {
                         .append("\n");
             }
         }
-        sb.append(LINE_BREAK);
         return sb.toString();
     }
 }

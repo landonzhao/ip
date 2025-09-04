@@ -6,7 +6,7 @@ package burgerburglar;
  */
 public class BurgerCommand extends Command {
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showBurger();
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
+        return "BURGER IS BURGER, AND YOU ARE THE FRIES.";
     }
 }
