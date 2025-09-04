@@ -51,7 +51,7 @@ public class MainWindow {
         }
 
         // Call backend for response
-        String response = getResponse(input);
+        String response = burgerburglar.getResponse(input);
 
         // Add dialog boxes
         dialogContainer.getChildren().addAll(

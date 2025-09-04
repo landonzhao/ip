@@ -88,4 +88,13 @@ public class BurgerBurglar {
     public static void main(String[] args) {
         new BurgerBurglar("data/burgerburglar.txt").run();
     }
+
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parse(input);
+            return command.execute(tasks, ui, storage);
+        } catch (BurgerException e) {
+            return e.getMessage();
+        }
+    }
 }

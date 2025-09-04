@@ -24,13 +24,13 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
 
             // Pass backend BurgerBurglar instance to MainWindow controller
-            MainWindow controller = fxmlLoader.getController();
-            controller.setBurgerBurglar(burgerburglar);
-
             Scene scene = new Scene(ap);
             stage.setTitle("BurgerBurglar");
             stage.setScene(scene);
             stage.show();
+
+            MainWindow controller = fxmlLoader.getController();
+            controller.setBurgerBurglar(new BurgerBurglar("data/burgerburglar.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
