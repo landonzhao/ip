@@ -30,6 +30,7 @@ public class BurgerBurglar {
      * @param filePath The path of the file to load/save tasks.
      */
     public BurgerBurglar(String filePath) {
+        assert filePath != null && !filePath.isBlank() : "File path must not be null or empty";
         ui = new Ui();
         storage = new Storage(filePath);
         TaskList loadedTasks;
@@ -39,6 +40,9 @@ public class BurgerBurglar {
             ui.showError("Could not load saved tasks. Starting with empty list.");
             loadedTasks = new TaskList();
         }
+
+        assert loadedTasks != null : "Task list must never be null after initialization";
+
         tasks = loadedTasks;
     }
 
