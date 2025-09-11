@@ -7,8 +7,6 @@ import java.util.List;
  * Represents a list of tasks and provides operations to manage them.
  */
 public class TaskList {
-    private static final String LINE_BREAK =
-            "______________________________________________________________________\n";
     private final List<Task> tasks;
 
     /**
@@ -16,9 +14,11 @@ public class TaskList {
      */
     public TaskList() {
         this.tasks = new ArrayList<>();
+        assert tasks != null : "Task list should be initialized";
     }
 
     public TaskList(List<Task> tasks) {
+        assert tasks != null : "Input task list cannot be null";
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -28,7 +28,9 @@ public class TaskList {
      * @param task The task to be added.
      */
     public void addTask(Task task) {
+        assert task != null : "Cannot add null task to task list";
         tasks.add(task);
+        assert tasks.contains(task) : "Task should have been added successfully";
     }
 
     /**
@@ -39,7 +41,9 @@ public class TaskList {
      * @return The updated task.
      */
     public Task markTask(int index, boolean isDone) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for markTask";
         Task task = tasks.get(index);
+        assert task != null : "Task at index should not be null";
         if (isDone) {
             task.markAsDone();
         } else {
@@ -55,10 +59,13 @@ public class TaskList {
      * @return The removed task.
      */
     public Task deleteTask(int index) {
+        assert tasks.size() > 0 : "Cannot delete from an empty task list";
         if (index <= 0 || index >= tasks.size()) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        return tasks.remove(index - 1);
+        Task removed = tasks.remove(index - 1);
+        assert removed != null : "Removed task should not be null";
+        return removed;
     }
 
     /**
