@@ -10,7 +10,7 @@ repositories {
 }
 
 checkstyle {
-    toolVersion = '11.0.0' // Match this version in IntelliJ
+    toolVersion = '11.0.0'
 }
 
 dependencies {
@@ -60,6 +60,6 @@ shadowJar {
     archiveClassifier = null
 }
 
-run{
+run {
     standardInput = System.in
 }

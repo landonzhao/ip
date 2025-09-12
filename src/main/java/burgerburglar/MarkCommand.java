@@ -2,6 +2,7 @@ package burgerburglar;
 
 /**
  * Represents a command to mark or unmark a task as done in the task list.
+ * <p>
  * This command updates the task status and saves the task list to storage.
  */
 public class MarkCommand extends Command {
@@ -15,12 +16,16 @@ public class MarkCommand extends Command {
      * @param isMark true to mark the task as done, false to unmark it
      */
     public MarkCommand(String args, boolean isMark) {
+        assert args != null && !args.isBlank() : "Args cannot be null or blank";
         this.args = args;
         this.isMark = isMark;
     }
 
     @Override
     public String execute(TaskList tasks, Ui ui, Storage storage) throws BurgerException {
+        assert tasks != null : "TaskList cannot be null";
+        assert storage != null : "Storage cannot be null";
+
         try {
             int index = Integer.parseInt(args.trim()) - 1;
             Task updated = tasks.markTask(index, isMark);
@@ -28,9 +33,9 @@ public class MarkCommand extends Command {
             storage.save(tasks);
 
             if (isMark) {
-                return "YOU DID IT! BURGER!\nMARKED: " + updated;
+                return String.format("YOU DID IT! BURGER!\nMARKED: %s", updated);
             } else {
-                return "BURGER IS ASHAMED OF YOU.\nUNMARKED: " + updated;
+                return String.format("BURGER IS ASHAMED OF YOU.\nUNMARKED: %s", updated);
             }
 
         } catch (NumberFormatException e) {

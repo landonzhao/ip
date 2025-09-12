@@ -13,6 +13,9 @@ import javafx.scene.layout.VBox;
  */
 public class MainWindow {
 
+    private static final String USER_IMAGE_PATH = "/images/user.jpg";
+    private static final String BURGER_IMAGE_PATH = "/images/burger.png";
+
     @FXML
     private AnchorPane root;
     @FXML
@@ -26,62 +29,58 @@ public class MainWindow {
 
     private BurgerBurglar burgerburglar;
 
-    // Placeholder images (replace with actual file paths/resources later)
-    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.jpg"));
-    private final Image burgerImage = new Image(this.getClass().getResourceAsStream("/images/burger.png"));
+    private final Image userImage = new Image(
+            getClass().getResourceAsStream(USER_IMAGE_PATH)
+    );
+    private final Image burgerImage = new Image(
+            getClass().getResourceAsStream(BURGER_IMAGE_PATH)
+    );
 
     @FXML
     public void initialize() {
-        // Automatically scroll to the bottom when new dialog is added
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        bindAutoScroll();
     }
 
-    public void setBurgerBurglar(BurgerBurglar b) {
-        this.burgerburglar = b;
+    public void setBurgerBurglar(BurgerBurglar burgerburglar) {
+        this.burgerburglar = burgerburglar;
     }
 
     /**
-     * Handles user input, sends it to the backend, and displays dialog boxes.
+     * Handles user input: validates, delegates to backend, displays dialogs.
      */
     @FXML
     private void handleUserInput() {
         String input = userInput.getText().trim();
         if (input.isEmpty()) {
-            return;
+            return; // guard clause
         }
 
-        // Call backend for response
         String response = burgerburglar.getResponse(input);
+        showDialogs(input, response);
+        clearUserInput();
+    }
 
-        // Add dialog boxes
+    /**
+     * Ensures scroll pane always scrolls to the bottom as new messages are added.
+     */
+    private void bindAutoScroll() {
+        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+    }
+
+    /**
+     * Displays both user and burger dialogs.
+     */
+    private void showDialogs(String input, String response) {
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getBurgerDialog(response, burgerImage)
         );
-
-        // Clear input field
-        userInput.clear();
     }
 
     /**
-     * Generates a response using the BurgerBurglar backend.
-     * Currently just echoes the input; replace with actual command execution.
-     *
-     * @param input The user's input
-     * @return Response from BurgerBurglar
+     * Clears the user input field after sending a message.
      */
-    private String getResponse(String input) {
-        if (burgerburglar == null) {
-            return input; // fallback if backend not set
-        }
-        try {
-            // Execute command and capture output
-            // For GUI, you might modify BurgerBurglar to return a String response
-            // For now, simple placeholder:
-            return input; // remove "BurgerBurglar says:" prefix
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
+    private void clearUserInput() {
+        userInput.clear();
     }
 }
-
