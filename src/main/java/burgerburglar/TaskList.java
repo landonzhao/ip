@@ -13,7 +13,6 @@ public class TaskList {
     /** Constructs an empty task list. */
     public TaskList() {
         tasks = new ArrayList<>();
-        assert tasks != null : "Task list should be initialized";
     }
 
     /** Constructs a task list with the given tasks. */

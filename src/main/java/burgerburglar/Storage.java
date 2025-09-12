@@ -115,10 +115,14 @@ public class Storage {
      * @return the Task object, or null if invalid
      */
     private Task parseLineSafe(String line) {
-        if (line == null || line.isBlank()) return null;
+        if (line == null || line.isBlank()) {
+            return null;
+        }
 
         String[] parts = line.split(" \\| ");
-        if (parts.length < 3) return null;
+        if (parts.length < 3) {
+            return null;
+        }
 
         String type = parts[0];
         boolean isDone = "1".equals(parts[1]);
@@ -126,20 +130,20 @@ public class Storage {
 
         try {
             switch (type) {
-                case "T":
-                    return new Todo(description, isDone);
+            case "T":
+                return new Todo(description, isDone);
 
-                case "D":
-                    LocalDateTime deadline = parseDateSafe(parts, 3);
-                    return new Deadline(description, deadline, isDone);
+            case "D":
+                LocalDateTime deadline = parseDateSafe(parts, 3);
+                return new Deadline(description, deadline, isDone);
 
-                case "E":
-                    LocalDateTime from = parseDateSafe(parts, 3);
-                    LocalDateTime to = parseDateSafe(parts, 4);
-                    return new Event(description, from, to, isDone);
+            case "E":
+                LocalDateTime from = parseDateSafe(parts, 3);
+                LocalDateTime to = parseDateSafe(parts, 4);
+                return new Event(description, from, to, isDone);
 
-                default:
-                    return null;
+            default:
+                return null;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("BURGER ERROR: Malformed line skipped → " + line);
@@ -155,7 +159,9 @@ public class Storage {
      * @return the parsed LocalDateTime, or null if invalid or missing
      */
     private LocalDateTime parseDateSafe(String[] parts, int index) {
-        if (parts.length <= index || parts[index].isBlank()) return null;
+        if (parts.length <= index || parts[index].isBlank()) {
+            return null;
+        }
 
         try {
             return LocalDateTime.parse(parts[index]);
