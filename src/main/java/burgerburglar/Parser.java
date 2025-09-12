@@ -56,6 +56,8 @@ public class Parser {
      */
     private static Command createCommand(String commandWord, String args) throws BurgerException {
         switch (commandWord) {
+        case "hi":
+            return new GreetingCommand();
         case "bye":
             return new ExitCommand();
         case "list":
@@ -76,6 +78,8 @@ public class Parser {
             return new BurgerCommand();
         case "find":
             return new FindCommand(args);
+        case "help":
+            return new HelpCommand();
         default:
             throw new BurgerException("BURGER DOESN’T GET IT.");
         }

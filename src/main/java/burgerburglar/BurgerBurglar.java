@@ -1,8 +1,5 @@
 package burgerburglar;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * The main class of the BurgerBurglar application.
@@ -11,22 +8,8 @@ import java.nio.file.Paths;
  * and running the main program loop.
  */
 public class BurgerBurglar {
-    /** Current version of BurgerBurglar. */
-    private static final String VERSION = "v0.9";
-
-    /** Line separator used for UI messages. */
-    private static final String LINE_BREAK =
-            "______________________________________________________________________\n";
-
     /** Default file path for saving and loading tasks. */
     private static final String DEFAULT_FILE_PATH = "data/burgerburglar.txt";
-
-    /** File path for the application logo. */
-    private static final String LOGO_FILE_PATH = "data/logo.txt";
-
-    /** Fallback message if logo cannot be loaded. */
-    private static final String LOGO_NOT_FOUND = "BURGERBURGLAR LOGO NOT FOUND!";
-
     private final Ui ui;
     private final TaskList tasks;
     private final Storage storage;
@@ -62,20 +45,12 @@ public class BurgerBurglar {
      * Starts the main program loop.
      */
     public void run() {
-        showWelcomeMessage();
+        showGreeting();
 
         boolean isExit = false;
         while (!isExit) {
             isExit = processNextCommand();
         }
-    }
-
-    /**
-     * Displays the welcome message with the logo and version.
-     */
-    private void showWelcomeMessage() {
-        String logo = loadLogo();
-        ui.showWelcome(logo, VERSION);
     }
 
     /**
@@ -95,16 +70,6 @@ public class BurgerBurglar {
         }
     }
 
-    /**
-     * Loads the BURGERBURGLAR logo from file.
-     */
-    private static String loadLogo() {
-        try {
-            return Files.readString(Paths.get(LOGO_FILE_PATH));
-        } catch (IOException e) {
-            return LOGO_NOT_FOUND;
-        }
-    }
 
     /**
      * Entry point of the application.
@@ -128,5 +93,9 @@ public class BurgerBurglar {
         } catch (BurgerException e) {
             return e.getMessage();
         }
+    }
+
+    public String showGreeting() {
+        return "GOODDAY, GOODBURGER.\nIF YOU NEED HELP, SAY HELP.";
     }
 }
