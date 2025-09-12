@@ -7,15 +7,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Pos;
 
+
+/**
+ * A custom control representing a dialog box in the GUI.
+ */
 public class DialogBox extends HBox {
+
+    private static final String USER_SPEAKER = "YOU";
+    private static final String BURGER_SPEAKER = "BURGER";
+    private static final double MAX_BUBBLE_WIDTH = 250.0;
 
     @FXML
     private Label dialog;
@@ -25,38 +33,52 @@ public class DialogBox extends HBox {
     private VBox avatarContainer;
 
     public DialogBox() {
+        loadFxml();
+    }
+
+    private void loadFxml() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DialogBox.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load DialogBox FXML.", e);
         }
     }
 
     private void setData(String text, Image img, String speaker, boolean isUser) {
-        dialog.setText(text);
-        displayPicture.setImage(img);
+        setDialogText(text);
+        setDisplayImage(img);
+        addSpeakerLabel(speaker);
+        styleDialogBubble(isUser);
+    }
 
-        // Speaker label under avatar
+    private void setDialogText(String text) {
+        dialog.setText(text);
+        dialog.setWrapText(true);
+        dialog.setMaxWidth(MAX_BUBBLE_WIDTH);
+    }
+
+    private void setDisplayImage(Image img) {
+        displayPicture.setImage(img);
+    }
+
+    private void addSpeakerLabel(String speaker) {
         Label speakerLabel = new Label(speaker);
         speakerLabel.getStyleClass().add("speaker-label");
         avatarContainer.getChildren().add(speakerLabel);
+    }
 
-        // Style dialog bubble
+    private void styleDialogBubble(boolean isUser) {
         dialog.getStyleClass().add("dialog-bubble");
         if (isUser) {
-            dialog.getStyleClass().add("user"); // add 'user' class for user dialog
+            dialog.getStyleClass().add("user");
         }
-
-        // Make label wrap text and adapt width
-        dialog.setWrapText(true);
-        dialog.setMaxWidth(250); // max bubble width
     }
 
     private void flip() {
-        ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
+        ObservableList<Node> tmp = FXCollections.observableArrayList(getChildren());
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_RIGHT);
@@ -64,14 +86,14 @@ public class DialogBox extends HBox {
 
     public static DialogBox getUserDialog(String text, Image img) {
         DialogBox db = new DialogBox();
-        db.setData(text, img, "YOU", true);
+        db.setData(text, img, USER_SPEAKER, true);
         db.flip();
         return db;
     }
 
     public static DialogBox getBurgerDialog(String text, Image img) {
         DialogBox db = new DialogBox();
-        db.setData(text, img, "BURGER", false);
+        db.setData(text, img, BURGER_SPEAKER, false);
         return db;
     }
 }
