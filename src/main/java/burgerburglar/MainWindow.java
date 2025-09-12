@@ -36,6 +36,9 @@ public class MainWindow {
             getClass().getResourceAsStream(BURGER_IMAGE_PATH)
     );
 
+    /**
+     * Greet the user upon entry.
+     */
     @FXML
     public void initialize() {
         bindAutoScroll();
@@ -43,6 +46,16 @@ public class MainWindow {
 
     public void setBurgerBurglar(BurgerBurglar burgerburglar) {
         this.burgerburglar = burgerburglar;
+        showGreeting();
+    }
+
+    /**
+     * Show the greeting message from BurgerBurglar.
+     */
+    private void showGreeting() {
+        dialogContainer.getChildren().add(
+                DialogBox.getBurgerDialog(burgerburglar.showGreeting(), burgerImage)
+        );
     }
 
     /**
