@@ -25,6 +25,7 @@ public class Storage {
      * @param filePath the file path where tasks will be loaded from and saved to
      */
     public Storage(String filePath) {
+        assert filePath != null && !filePath.isBlank() : "File path must not be null or blank";
         this.FILE_PATH = filePath;
     }
 
@@ -44,7 +45,8 @@ public class Storage {
         try {
             if (!file.exists()) {
                 file.getParentFile().mkdirs(); // create folder if missing
-                file.createNewFile();          // create file
+                boolean created = file.createNewFile(); // create file
+                assert created || file.exists() : "File should exist after creation attempt";
                 return new TaskList();
             }
 
@@ -77,6 +79,8 @@ public class Storage {
      * @param list the {@link TaskList} to save
      */
     public void save(TaskList list) {
+        assert list != null : "TaskList to save cannot be null";
+
         try (FileWriter fw = new FileWriter(FILE_PATH)) {
             for (Task task : list.getTasks()) {
                 fw.write(task.serialize() + System.lineSeparator());
@@ -93,6 +97,7 @@ public class Storage {
      * @return the {@link Task} object represented by the line, or {@code null} if invalid
      */
     private Task parseLine(String line) {
+        assert line != null && !line.isBlank() : "Line to parse cannot be null or blank";
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean isDone = parts[1].equals("1");

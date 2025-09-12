@@ -16,6 +16,8 @@ public class Parser {
      * @throws BurgerException if the input does not match any known command
      */
     public static Command parse(String input) throws BurgerException {
+        assert input != null && !input.isBlank() : "Input must not be null or blank";
+
         String[] parts = input.trim().split(" ", 2);
         String commandWord = parts[0];
         String args = parts.length > 1 ? parts[1] : "";
