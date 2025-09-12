@@ -15,25 +15,37 @@ import java.io.IOException;
  */
 public class Main extends Application {
 
-    private final BurgerBurglar burgerburglar = new BurgerBurglar();
+    private static final String MAIN_WINDOW_FXML = "/view/MainWindow.fxml";
+    private static final String WINDOW_TITLE = "BurgerBurglar";
+    private static final String DEFAULT_FILE_PATH = "data/burgerburglar.txt";
+
+    private final BurgerBurglar burgerburglar = new BurgerBurglar(DEFAULT_FILE_PATH);
 
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
-            AnchorPane ap = fxmlLoader.load();
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(MAIN_WINDOW_FXML));
+            AnchorPane mainLayout = fxmlLoader.load();
 
-            // Pass backend BurgerBurglar instance to MainWindow controller
-            Scene scene = new Scene(ap);
-            stage.setTitle("BurgerBurglar");
+            Scene scene = new Scene(mainLayout);
+            stage.setTitle(WINDOW_TITLE);
             stage.setScene(scene);
             stage.show();
 
             MainWindow controller = fxmlLoader.getController();
-            controller.setBurgerBurglar(new BurgerBurglar("data/burgerburglar.txt"));
+            controller.setBurgerBurglar(burgerburglar);
         } catch (IOException e) {
-            e.printStackTrace();
+            showFatalError(e);
         }
     }
-}
 
+    /**
+     * Displays a fatal error in the console if the application cannot start.
+     *
+     * @param e the IOException that prevented loading the main window
+     */
+    private void showFatalError(IOException e) {
+        System.err.println("Failed to load the main window: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
