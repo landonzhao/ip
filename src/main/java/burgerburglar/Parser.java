@@ -1,7 +1,7 @@
 package burgerburglar;
 
 /**
- * Parses user input into a {@link Command} that can be executed by {@link BurgerBurglar}.
+ * Parses user input into a {@link Command} executable by {@link BurgerBurglar}.
  * <p>
  * The Parser interprets the first word of the input as the command keyword and
  * the remaining text as arguments for that command.
@@ -9,19 +9,52 @@ package burgerburglar;
 public class Parser {
 
     /**
-     * Parses a string input from the user and returns the corresponding {@link Command}.
+     * Parses raw user input into a {@link Command}.
      *
-     * @param input the raw input string from the user
-     * @return a {@link Command} object representing the action requested by the user
+     * @param input the raw string input from the user
+     * @return a {@link Command} representing the requested action
      * @throws BurgerException if the input does not match any known command
      */
     public static Command parse(String input) throws BurgerException {
         assert input != null && !input.isBlank() : "Input must not be null or blank";
 
-        String[] parts = input.trim().split(" ", 2);
-        String commandWord = parts[0];
-        String args = parts.length > 1 ? parts[1] : "";
+        String commandWord = extractCommandWord(input);
+        String args = extractArguments(input);
 
+        return createCommand(commandWord, args);
+    }
+
+    /**
+     * Extracts the command keyword from input.
+     *
+     * @param input the raw input string
+     * @return the first word of the input
+     */
+    private static String extractCommandWord(String input) {
+        String[] parts = input.trim().split(" ", 2);
+        return parts[0];
+    }
+
+    /**
+     * Extracts the arguments portion of the input.
+     *
+     * @param input the raw input string
+     * @return the portion after the command keyword, or empty string if none
+     */
+    private static String extractArguments(String input) {
+        String[] parts = input.trim().split(" ", 2);
+        return parts.length > 1 ? parts[1] : "";
+    }
+
+    /**
+     * Maps a command keyword and its arguments to a {@link Command}.
+     *
+     * @param commandWord the command keyword
+     * @param args        the command arguments
+     * @return the corresponding {@link Command} object
+     * @throws BurgerException if the command keyword is unknown
+     */
+    private static Command createCommand(String commandWord, String args) throws BurgerException {
         switch (commandWord) {
             case "bye":
                 return new ExitCommand();

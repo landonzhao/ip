@@ -8,80 +8,56 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Handles the loading and saving of {@link TaskList} data to a local file.
+ * Handles the persistent storage of {@link TaskList} to a local file.
  * <p>
- * Each task is serialized into a line in the file, and the Storage class is responsible
- * for reading that file and reconstructing {@link Task} objects, as well as writing
- * updated task data back to the file.
+ * Supports loading tasks from a file, saving tasks to a file, and parsing
+ * task lines into {@link Task} objects. Handles corrupted or missing files gracefully.
  */
 public class Storage {
-    private String FILE_PATH = "./data/burgerburglar.txt";
+    private final String filePath;
 
     /**
-     * Constructs a Storage object that manages a specific file path.
+     * Constructs a Storage manager for a specific file path.
      *
-     * @param filePath the file path where tasks will be loaded from and saved to
+     * @param filePath the file path for saving and loading tasks
      */
     public Storage(String filePath) {
         assert filePath != null && !filePath.isBlank() : "File path must not be null or blank";
-        this.FILE_PATH = filePath;
+        this.filePath = filePath;
     }
 
     /**
-     * Loads the task list from the file specified in {@link #FILE_PATH}.
+     * Loads tasks from the storage file.
      * <p>
-     * If the file or its parent directories do not exist, they will be created automatically,
-     * and an empty {@link TaskList} will be returned.
+     * If the file or directories do not exist, they will be created and an empty TaskList returned.
      *
-     * @return a {@link TaskList} containing tasks loaded from the file
-     * @throws BurgerException if there is an I/O error while reading the file
+     * @return a TaskList loaded from the file
+     * @throws BurgerException if an I/O error occurs while reading
      */
     public TaskList load() throws BurgerException {
-        File file = new File(FILE_PATH);
-        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
 
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs(); // create folder if missing
-                boolean created = file.createNewFile(); // create file
-                assert created || file.exists() : "File should exist after creation attempt";
-                return new TaskList();
-            }
-
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    try {
-                        Task t = parseLine(line);
-                        if (t != null) {
-                            tasks.add(t);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("BURGER ERROR: Corrupted line skipped → " + line);
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            throw new BurgerException("BURGER ERROR: Failed to load tasks from file.");
+        if (!file.exists()) {
+            createFileWithDirectories(file);
+            return new TaskList();
         }
 
+        List<Task> tasks = readTasksFromFile(file);
         return new TaskList(tasks);
     }
 
     /**
-     * Saves the given {@link TaskList} to the file specified in {@link #FILE_PATH}.
-     * <p>
-     * Each task is serialized into a line in the file.
+     * Saves the given {@link TaskList} to the storage file.
      *
-     * @param list the {@link TaskList} to save
+     * @param list the TaskList to save
      */
     public void save(TaskList list) {
         assert list != null : "TaskList to save cannot be null";
 
-        try (FileWriter fw = new FileWriter(FILE_PATH)) {
+        try (FileWriter fw = new FileWriter(filePath)) {
             for (Task task : list.getTasks()) {
                 fw.write(task.serialize() + System.lineSeparator());
             }
@@ -91,57 +67,100 @@ public class Storage {
     }
 
     /**
-     * Parses a single line from the storage file into a {@link Task} object.
+     * Creates the storage file along with missing parent directories.
      *
-     * @param line a line from the storage file
-     * @return the {@link Task} object represented by the line, or {@code null} if invalid
+     * @param file the File object representing the storage file
+     * @throws BurgerException if the file cannot be created
      */
-    private Task parseLine(String line) {
-        assert line != null && !line.isBlank() : "Line to parse cannot be null or blank";
+    private void createFileWithDirectories(File file) throws BurgerException {
+        try {
+            file.getParentFile().mkdirs();
+            boolean created = file.createNewFile();
+            assert created || file.exists() : "File should exist after creation attempt";
+        } catch (IOException e) {
+            throw new BurgerException("BURGER ERROR: Failed to create storage file.");
+        }
+    }
+
+    /**
+     * Reads all task lines from a file and parses them into Task objects.
+     *
+     * @param file the file to read tasks from
+     * @return a list of Task objects
+     */
+    private List<Task> readTasksFromFile(File file) {
+        List<Task> tasks = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Task task = parseLineSafe(line);
+                if (task != null) {
+                    tasks.add(task);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("BURGER ERROR: Failed to read tasks from file.");
+        }
+
+        return tasks;
+    }
+
+    /**
+     * Safely parses a line into a {@link Task} object.
+     * <p>
+     * Handles todos, deadlines, and events. Returns null if the line is invalid or corrupted.
+     *
+     * @param line the line to parse
+     * @return the Task object, or null if invalid
+     */
+    private Task parseLineSafe(String line) {
+        if (line == null || line.isBlank()) return null;
+
         String[] parts = line.split(" \\| ");
+        if (parts.length < 3) return null;
+
         String type = parts[0];
-        boolean isDone = parts[1].equals("1");
+        boolean isDone = "1".equals(parts[1]);
+        String description = parts[2];
 
         try {
             switch (type) {
                 case "T":
-                    return new Todo(parts[2], isDone);
+                    return new Todo(description, isDone);
 
                 case "D":
-                    LocalDateTime deadline = null;
-                    if (parts.length > 3 && !parts[3].isEmpty()) {
-                        try {
-                            deadline = LocalDateTime.parse(parts[3]);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("BURGER ERROR: Invalid date in saved deadline, using unspecified.");
-                        }
-                    }
-                    return new Deadline(parts[2], deadline, isDone);
+                    LocalDateTime deadline = parseDateSafe(parts, 3);
+                    return new Deadline(description, deadline, isDone);
 
                 case "E":
-                    LocalDateTime from = null;
-                    LocalDateTime to = null;
-                    if (parts.length > 3 && !parts[3].isEmpty()) {
-                        try {
-                            from = LocalDateTime.parse(parts[3]);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("BURGER ERROR: Invalid start date in saved event, using unspecified.");
-                        }
-                    }
-                    if (parts.length > 4 && !parts[4].isEmpty()) {
-                        try {
-                            to = LocalDateTime.parse(parts[4]);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("BURGER ERROR: Invalid end date in saved event, using unspecified.");
-                        }
-                    }
-                    return new Event(parts[2], from, to, isDone);
+                    LocalDateTime from = parseDateSafe(parts, 3);
+                    LocalDateTime to = parseDateSafe(parts, 4);
+                    return new Event(description, from, to, isDone);
 
                 default:
                     return null;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("BURGER ERROR: Malformed line skipped → " + line);
+            return null;
+        }
+    }
+
+    /**
+     * Safely parses a LocalDateTime from the given parts array.
+     *
+     * @param parts the array containing serialized task data
+     * @param index the index where the date string is located
+     * @return the parsed LocalDateTime, or null if invalid or missing
+     */
+    private LocalDateTime parseDateSafe(String[] parts, int index) {
+        if (parts.length <= index || parts[index].isBlank()) return null;
+
+        try {
+            return LocalDateTime.parse(parts[index]);
+        } catch (DateTimeParseException e) {
+            System.out.println("BURGER ERROR: Invalid date in saved task, using unspecified.");
             return null;
         }
     }
