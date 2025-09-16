@@ -24,7 +24,7 @@ public class DeleteCommand extends Command {
         assert storage != null : "Storage cannot be null in execute";
 
         try {
-            int index = Integer.parseInt(args.trim()) - 1;
+            int index = Integer.parseInt(args.trim());
             Task removed = tasks.deleteTask(index);
             storage.save(tasks);
             return formatDeleteMessage(removed, tasks.size());

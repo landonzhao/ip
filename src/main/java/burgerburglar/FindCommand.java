@@ -52,7 +52,7 @@ public class FindCommand extends Command {
      * Formats the matching tasks into a user-friendly message.
      */
     private String formatMatches(List<Task> matches) {
-        StringBuilder sb = new StringBuilder("\n");
+        StringBuilder sb = new StringBuilder();
         if (matches.isEmpty()) {
             sb.append("BURGER FOUND NO MATCH FOR: ").append(keyword).append("\n");
         } else {
@@ -61,7 +61,6 @@ public class FindCommand extends Command {
                 sb.append(i + 1).append(". ").append(matches.get(i)).append("\n");
             }
         }
-        sb.append("\n");
         return sb.toString();
     }
 }

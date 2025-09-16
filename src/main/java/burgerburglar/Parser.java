@@ -55,7 +55,7 @@ public class Parser {
      * @throws BurgerException if the command keyword is unknown
      */
     private static Command createCommand(String commandWord, String args) throws BurgerException {
-        switch (commandWord) {
+        switch (commandWord.toLowerCase()) {
         case "hi":
             return new GreetingCommand();
         case "bye":
