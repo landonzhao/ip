@@ -1,5 +1,7 @@
 package burgerburglar;
 
+import java.io.InputStream;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -7,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
+
 
 /**
  * Controller for the main window of the BurgerBurglar GUI.
@@ -30,11 +34,23 @@ public class MainWindow {
     private BurgerBurglar burgerburglar;
 
     private final Image userImage = new Image(
-            getClass().getResourceAsStream(USER_IMAGE_PATH)
+            assertNotNull(getClass().getResourceAsStream(USER_IMAGE_PATH),
+                    "User image resource not found: " + USER_IMAGE_PATH)
     );
+
     private final Image burgerImage = new Image(
-            getClass().getResourceAsStream(BURGER_IMAGE_PATH)
+            assertNotNull(getClass().getResourceAsStream(BURGER_IMAGE_PATH),
+                    "Burger image resource not found: " + BURGER_IMAGE_PATH)
     );
+
+    /**
+     * Helper method to assert that a resource stream is not null.
+     * Throws AssertionError with descriptive message if null.
+     */
+    private InputStream assertNotNull(InputStream stream, String errorMessage) {
+        assert stream != null : errorMessage;
+        return stream;
+    }
 
     /**
      * Greet the user upon entry.
