@@ -13,7 +13,9 @@
         <!-- Scrollable dialog container -->
         <ScrollPane fx:id="scrollPane"
                     prefHeight="560.0" prefWidth="400.0"
-                    fitToWidth="true" vbarPolicy="ALWAYS"
+                    vbarPolicy="ALWAYS"
+                    fitToWidth="true"
+                    focusTraversable="true"
                     AnchorPane.topAnchor="0.0"
                     AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0"

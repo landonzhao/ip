@@ -41,12 +41,14 @@ public class MainWindow {
      */
     @FXML
     public void initialize() {
-        bindAutoScroll();
+        setupEnterKeyHandler();
+        forwardScrollEventsToScrollPane();
     }
 
     public void setBurgerBurglar(BurgerBurglar burgerburglar) {
         this.burgerburglar = burgerburglar;
         showGreeting();
+        scrollToBottom();
     }
 
     /**
@@ -73,12 +75,6 @@ public class MainWindow {
         clearUserInput();
     }
 
-    /**
-     * Ensures scroll pane always scrolls to the bottom as new messages are added.
-     */
-    private void bindAutoScroll() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-    }
 
     /**
      * Displays both user and burger dialogs.
@@ -88,6 +84,60 @@ public class MainWindow {
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getBurgerDialog(response, burgerImage)
         );
+        scrollToBottom();
+    }
+
+    /**
+     * Sets up the Enter key handler for the text field.
+     */
+    private void setupEnterKeyHandler() {
+        userInput.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+            case ENTER:
+                handleUserInput();
+                break;
+            default:
+                break;
+            }
+        });
+    }
+
+    /**
+     * Handle scroll events directly on the dialog container.
+     * This should work for trackpad and mouse wheel.
+     */
+    private void forwardScrollEventsToScrollPane() {
+        dialogContainer.setOnScroll(event -> {
+            double deltaY = event.getDeltaY(); // Vertical scroll amount
+            double currentVValue = scrollPane.getVvalue();
+            double contentHeight = dialogContainer.getHeight();
+            double viewportHeight = scrollPane.getViewportBounds().getHeight();
+
+            // Calculate new scroll position
+            double newVValue = currentVValue - deltaY / contentHeight;
+
+            // Clamp between 0 and 1
+            newVValue = Math.max(0, Math.min(1, newVValue));
+
+            // Set new scroll position
+            scrollPane.setVvalue(newVValue);
+
+            event.consume(); // Prevent default handling
+        });
+    }
+
+    /**
+     * Scrolls to the bottom of the scroll pane only if the user is near the bottom.
+     * This allows manual scrolling without interruption.
+     */
+    private void scrollToBottom() {
+        double threshold = 0.95; // 95% from the top (i.e., near the bottom)
+        double currentScroll = scrollPane.getVvalue();
+
+        // If the user is near the bottom, scroll to the bottom when new message is added
+        if (currentScroll >= threshold) {
+            scrollPane.setVvalue(1.0); // Scroll to bottom
+        }
     }
 
     /**
