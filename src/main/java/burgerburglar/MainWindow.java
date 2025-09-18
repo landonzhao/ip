@@ -2,6 +2,7 @@ package burgerburglar;
 
 import java.io.InputStream;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -89,6 +90,11 @@ public class MainWindow {
         String response = burgerburglar.getResponse(input);
         showDialogs(input, response);
         clearUserInput();
+
+        if (input.equalsIgnoreCase("bye")) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
 
