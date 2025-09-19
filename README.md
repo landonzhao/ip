@@ -8,7 +8,7 @@ Welcome to **BurgerBurglar**, your friendly task-managing chatbot. This guide wi
 
 The screenshot below shows the full GUI window of BurgerBurglar.
 
-![BurgerBurglar GUI](Ui.png)
+![BurgerBurglar GUI](docs/Ui.png)
 
 ---
 
@@ -46,9 +46,9 @@ BurgerBurglar supports the following commands:
 
 Here are some sample screenshots showing BurgerBurglar in action:
 
-![some commands](listandmark.png)
+![some commands](docs/listandmark.png)
 
-![more commands](morecommands.png)
+![more commands](docs/morecommands.png)
 
 ---
 
